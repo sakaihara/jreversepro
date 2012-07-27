@@ -30,9 +30,7 @@ public class ClassFileParserFactory {
   public static ClassFileParser getClassFileParser(DataInputStream dis)
       throws ClassParserException, IOException {
     assertJVMMagic(dis);
-    JVMVersion jvmVersion = readVersion(dis);
-    // TODO: Depending on the supported JVM Versions - select one
-    // appropriately
+    
     return new DefaultClassFileParser();
   }
 
@@ -62,7 +60,7 @@ public class ClassFileParserFactory {
    * @throws IOException
    *           Thrown if error in stream of bytes containing the class file.
    */
-  private static JVMVersion readVersion(DataInputStream dis) throws IOException {
+  public static JVMVersion readVersion(DataInputStream dis) throws IOException {
     JVMVersion jvmVersion = new JVMVersion();
 
     jvmVersion.minor = dis.readShort();
@@ -91,7 +89,7 @@ public class ClassFileParserFactory {
       return (_version.minor >= 3);
     }
 
-    if (_version.major >= 46 && _version.major <= 48) {
+    if (_version.major >= 100 && _version.major <= 48) {
       return true;
     }
     logger.warning("Major: " + _version.major + " ,Minor: " + _version.minor
