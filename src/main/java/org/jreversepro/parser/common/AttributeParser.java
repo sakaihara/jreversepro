@@ -28,6 +28,9 @@ import org.jreversepro.jvm.TypeInferrer;
 import org.jreversepro.reflect.ConstantPool;
 import org.jreversepro.reflect.LocalVariableTable;
 import org.jreversepro.reflect.Method;
+import org.jreversepro.reflect.localvariabletype.LocalVariableTableTypeFactory;
+import org.jreversepro.reflect.localvariabletype.LocalVariableTypeTable;
+import org.jreversepro.reflect.stackmaptable.StackMapFactory;
 
 
 /**
@@ -83,6 +86,20 @@ public final class AttributeParser {
     int len = aDis.readInt();// len must be zero.
   }
 
+  public static String readSignature(DataInputStream aDis,
+      ConstantPool aCpInfo) throws IOException {
+
+    //See: http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.9
+    aDis.readShort(); //short attNameIndex = 
+    aDis.readShort(); //short attLength = 
+    
+    short sigIndex = aDis.readShort();
+    String sig = aCpInfo.getUtf8String(sigIndex);  
+    
+    return sig;
+  }
+
+  
   /**
    * Manipulates the 'Synthetic' attribute of the Fields.
    * <p>
@@ -266,7 +283,22 @@ public final class AttributeParser {
       readLineNumberTable(aDis);
     } else if (attrName.equals(JVMConstants.ATTRIBUTE_LOCALVARIABLETABLE)) {
       readLocalVariableTable(aDis, aCpInfo, method);
+    } else if (attrName.equals(JVMConstants.ATTRIBUTE_STACKMAPTABLE)) {
+      readStackMapTable(aDis, aCpInfo, method);
+    } else if (attrName.equals(JVMConstants.ATTRIBUTE_LOCALVARIABLETYPETABLE)) {
+      readLocalVariableTypeTable(aDis, aCpInfo, method);
+    } else {
+      throw new IllegalArgumentException("Unhandled attribute: "+attrName);
     }
+    
+  }
+
+  private static void readLocalVariableTypeTable(DataInputStream aDis,
+      ConstantPool aCpInfo, Method method) throws IOException {
+    
+    LocalVariableTypeTable lvtt = LocalVariableTableTypeFactory.parseLocalVariableTable(aDis, aCpInfo);
+    method.setLocalVariableTypeTable(lvtt);
+    
   }
 
   /**
@@ -343,4 +375,39 @@ public final class AttributeParser {
   }
 
 
+  /**
+   * http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-4.html#jvms-4.7.4
+   * 
+   * LocalVariableTable_attribute {
+    u2 attribute_name_index;
+    u4 attribute_length;
+    u2 local_variable_table_length;
+    {   u2 start_pc;
+        u2 length;
+        u2 name_index;
+        u2 descriptor_index;
+        u2 index;
+    } local_variable_table[local_variable_table_length];
+}
+   * StackMapTable_attribute {
+      u2              attribute_name_index;
+      u4              attribute_length;
+      u2              number_of_entries;
+      stack_map_frame entries[number_of_entries];
+    }
+   * @param aDis
+   */
+
+  private static void readStackMapTable(DataInputStream aDis,
+      ConstantPool constPool, Method method) throws IOException {
+    
+    method.setStackMapTable(StackMapFactory.parseStackMapTable(aDis));
+    
+  }
+  
+  
+  
+  
+  
+  
 }

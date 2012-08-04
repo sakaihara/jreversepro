@@ -134,6 +134,8 @@ public class BinaryOpExpression extends Expression {
     case BITWISE_XOR:
       return lhs.getValueEx(L_BITXOR) + JLSConstants.LOGICAL_XOR
           + rhs.getValueEx(L_BITXOR);
+    case SMART_PLUS:
+      return (lhs.getJLSCode() + JLSConstants.SMART_PLUS + rhs.getJLSCode());
     default:
       throw new IllegalArgumentException("Illegal binary operator " + op);
     }

@@ -164,6 +164,7 @@ public class ClassInfo {
     majorNumber = rhsMajor;
     minorNumber = rhsMinor;
   }
+  
 
   public int getAccess() {
     return accessFlag;

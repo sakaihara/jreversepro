@@ -133,6 +133,12 @@ public interface JVMConstants {
   String ATTRIBUTE_SYNTHETIC = "Synthetic";
 
   /**
+   * Signature attribute of a Type.
+   */
+  String ATTRIBUTE_SIGNATURE = "Signature";
+
+  
+  /**
    * Code attribute of a Method.
    */
   String ATTRIBUTE_CODE = "Code";
@@ -156,7 +162,19 @@ public interface JVMConstants {
    * LocalVariableTable attribute of a Method.
    */
   String ATTRIBUTE_LOCALVARIABLETABLE = "LocalVariableTable";
+  
+  /**
+   * StackMapTable attribute of a Method.
+   */
+  String ATTRIBUTE_STACKMAPTABLE = "StackMapTable";
+  
+  /**
+   * LocalVariableTypeTable attribute of a Method.
+   */
+  String ATTRIBUTE_LOCALVARIABLETYPETABLE = "LocalVariableTypeTable";
 
+  
+  
   /**
    * SourceFile attribute of a Method.
    */

@@ -17,12 +17,21 @@
  */
 package org.jreversepro.ast.block;
 
+import java.util.Map;
+
+
 public class MethodBlock extends Block {
 
+  protected Map<String, Boolean> localVariableInitialized;
+  
   public MethodBlock(int lengthOfByteArray) {
     // There is no parent for this - because it is the main block
     super(null);
     this.lengthOfByteArray = lengthOfByteArray;
+  }
+  
+  public Map<String, Boolean> getLocalVariableInitialized() {
+    return localVariableInitialized;
   }
 
   @Override
@@ -30,6 +39,6 @@ public class MethodBlock extends Block {
     return lengthOfByteArray;
   }
 
-  private int lengthOfByteArray;
+  private final int lengthOfByteArray;
 
 }

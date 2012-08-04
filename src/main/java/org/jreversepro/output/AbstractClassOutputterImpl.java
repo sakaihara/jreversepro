@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.jreversepro.CustomLoggerFactory;
 import org.jreversepro.jls.JLSConstants;
+import org.jreversepro.jls.emitter.java14.DefaultSourceEmitter;
 import org.jreversepro.jvm.JVMConstants;
 import org.jreversepro.jvm.TypeInferrer;
 import org.jreversepro.reflect.ClassInfo;
@@ -292,9 +293,12 @@ abstract class AbstractClassOutputterImpl implements JVMConstants {
         sb.append(" ");
         // 0 is ok here - since the method arguments are
         // going to be in the full scope of the method.
-        sb.append(method.getVariableTable().getName(baseVariableIndex++,
-            VariableTable.FULL_SCOPE_INSTRUCTION_INDEX));
+        
+        String variableName = method.getVariableTable().getName(baseVariableIndex++,
+            VariableTable.FULL_SCOPE_INSTRUCTION_INDEX); 
+        DefaultSourceEmitter.setResolved(DefaultSourceEmitter.getCurrentBlock(), variableName);
 
+        sb.append(variableName);
         if (TypeInferrer.doesTypeOccupy2EntriesInVariableTable(jvmArgType)) {
           baseVariableIndex++; // Ignore this.
         }

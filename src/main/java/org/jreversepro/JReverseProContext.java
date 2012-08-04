@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
 
-
 import org.apache.commons.io.IOUtils;
 import org.jreversepro.output.AbstractOutputter;
 import org.jreversepro.output.DecompilerOutputter;

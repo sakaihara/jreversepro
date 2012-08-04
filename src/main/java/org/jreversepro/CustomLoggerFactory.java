@@ -35,7 +35,7 @@ public class CustomLoggerFactory {
     final SimpleFormatter formatter = new SimpleFormatter();
     final StreamHandler handler = new StreamHandler(System.out, formatter);
     logger.addHandler(handler);
-    logger.setLevel(Level.FINER);
+    logger.setLevel(Level.WARNING);
     return logger;
   }
 

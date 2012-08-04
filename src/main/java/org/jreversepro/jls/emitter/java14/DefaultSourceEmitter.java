@@ -16,6 +16,9 @@
  */
 package org.jreversepro.jls.emitter.java14;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jreversepro.ast.block.Block;
 import org.jreversepro.ast.block.MethodBlock;
 import org.jreversepro.jls.emitter.EmitterTarget;
@@ -24,11 +27,45 @@ import org.jreversepro.jls.emitter.SourceEmitter;
 
 public class DefaultSourceEmitter implements SourceEmitter {
 
+  private static Map<Block, Map<String, Boolean>> initializedVariable = new HashMap<Block, Map<String,Boolean>>();
+  private static Block currentBlock;
+  
+  public static Block getCurrentBlock() {
+    return currentBlock;
+  }
+   
+  public static void setResolved(Block block, String varaibleName) {
+    if(!initializedVariable.containsKey(block))
+    {
+      initializedVariable.put(block, new HashMap<String, Boolean>());
+    }
+    initializedVariable.get(block).put(varaibleName, Boolean.TRUE);
+  }
+  
+  public static boolean isResolved(Block currentBlock, String variableName) {
+    if(initializedVariable.containsKey(currentBlock)) {
+      //recurse up.
+      
+      if(initializedVariable.get(currentBlock).containsKey(variableName)) {
+        return initializedVariable.get(currentBlock).get(variableName);
+      }
+      else {
+        //recurse to parent block.
+        if(currentBlock.getParent()!=null)
+        {
+          isResolved(currentBlock.getParent(), variableName);
+        }
+      }
+    }
+    return false;
+  }
+  
   public String emitCode(Block block) {
     if (!(block instanceof MethodBlock)) {
       throw new IllegalArgumentException(
           "I take only MethodBlocks. Can't take " + block.getClass().getName());
-    }
+    }    
+    
     EmitterTarget target = new EmitterTarget();
     block.getEmitter().emitJLSCode(target, block);
     return target.getEmittedCode();

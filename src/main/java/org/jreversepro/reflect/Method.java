@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.jreversepro.jvm.JVMConstants;
 import org.jreversepro.jvm.TypeInferrer;
+import org.jreversepro.reflect.localvariabletype.LocalVariableTypeTable;
+import org.jreversepro.reflect.stackmaptable.StackMapTable;
 import org.jreversepro.reflect.variabletable.DynamicVariableTable;
 import org.jreversepro.reflect.variabletable.DynamicVariableTableContext;
 import org.jreversepro.reflect.variabletable.VariableTable;
@@ -94,6 +96,10 @@ public class Method extends Member {
    */
   private VariableTable variableTable;
 
+  private StackMapTable stackMapTable;
+  
+  private LocalVariableTypeTable localVariableTypeTable;
+  
   /**
    * 
    */
@@ -255,6 +261,24 @@ public class Method extends Member {
 
   public void setVariableTable(VariableTable localVarTable) {
     this.variableTable = localVarTable;
+  }
+  
+  public StackMapTable getStackMapTable() {
+    return stackMapTable;
+  }
+  
+  public void setStackMapTable(StackMapTable stackMapTable) {
+    this.stackMapTable = stackMapTable;
+  }
+  
+  
+  public void setLocalVariableTypeTable(
+      LocalVariableTypeTable localVariableTypeTable) {
+    this.localVariableTypeTable = localVariableTypeTable;
+  }
+  
+  public LocalVariableTypeTable getLocalVariableTypeTable() {
+    return localVariableTypeTable;
   }
 
   /**

@@ -111,7 +111,7 @@ public class AbstractClassFileParser {
       throws IOException {
     short count = dis.readShort();
 
-    List<Field> fields = new ArrayList<Field>();
+    List<Field> fields = new ArrayList<Field>(count);
     for (int i = 0; i < count; i++) {
       Field curField = new Field();
 
@@ -146,7 +146,7 @@ public class AbstractClassFileParser {
   public static List<Method> readMethods(DataInputStream dis,
       ConstantPool cpInfo) throws IOException {
     short count = dis.readShort();
-
+    
     List<Method> methods = new ArrayList<Method>();
 
     for (int i = 0; i < count; i++) {
@@ -482,6 +482,8 @@ public class AbstractClassFileParser {
       AttributeParser.readSynthetic(dis);
     } else if (attrName.equals(JVMConstants.ATTRIBUTE_DEPRECATED)) {
       AttributeParser.readDeprecated(dis);
+    } else if (attrName.equals(JVMConstants.ATTRIBUTE_SIGNATURE)) {
+      aRhsField.setSignature(AttributeParser.readSignature(dis, cpInfo));
     }
   }
 
@@ -516,6 +518,8 @@ public class AbstractClassFileParser {
       // TODO Should discuss with akkumar if he has implemented it
       // already in some other code location.
       AttributeParser.readInnerClasses(dis);
+    } else {
+      throw new IllegalStateException("Unhandled attribute: "+attrName);
     }
   }
 

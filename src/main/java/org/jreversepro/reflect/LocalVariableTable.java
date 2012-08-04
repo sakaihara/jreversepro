@@ -20,6 +20,7 @@ package org.jreversepro.reflect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jreversepro.CustomLoggerFactory;
@@ -51,6 +52,12 @@ public class LocalVariableTable implements VariableTable {
   public void addLocalVariable(short startPc, short length, short nameIndx,
       short descindx, String name, String desc, short frameIndex) {
 
+    if(logger.isLoggable(Level.FINER)) {
+      if(nameIndx <= 0) {
+        logger.finer("Name Index: "+nameIndx);
+      }
+    }
+    
     logger
         .finer((startPc + ":" + length + ":" + name + ":" + desc + ":" + frameIndex));
 
@@ -74,10 +81,20 @@ public class LocalVariableTable implements VariableTable {
           && (locVar.getStartPc() + locVar.getLength()) >= insIndex) {
         return locVar.getName();
       }
-
     }
-    throw new IllegalArgumentException("varIndex: " + varIndex + " , "
-        + " insIndex: " + insIndex + " not present in LocalVariableTable");
+    return "UNKNOWN :(";
+    //throw new IllegalArgumentException("varIndex: " + varIndex + " , "
+      //  + " insIndex: " + insIndex + " not present in LocalVariableTable");
+  }
+  
+  public String getType(int varIndex, int insIndex) {
+    for (final LocalVariable locVar : variableList) {
+      if (locVar.getIndex() == (varIndex)
+          && (locVar.getStartPc() + locVar.getLength()) >= insIndex) {
+        return locVar.getDescriptor();
+      }
+    }
+    return "UNKNOWN :(";
   }
 
   public void recordLocalDatatypeReference(int localVariableIndex,
@@ -141,6 +158,15 @@ public class LocalVariableTable implements VariableTable {
     public short getNameIndex() {
       return nameIndex;
     }
+
+    @Override
+    public String toString() {
+      return "LocalVariable [startPc=" + startPc + ", length=" + length
+          + ", name=" + name + ", descriptor=" + descriptor + ", index="
+          + index + "]";
+    }
+    
+    
 
   }
 

@@ -36,6 +36,8 @@ import org.jreversepro.reflect.ClassInfo;
  */
 public class CommandMain {
 
+  private static final Logger logger = CustomLoggerFactory.createLogger();
+  
   private final CommandLineInterface cli;
 
   private final JReverseProContext context;
@@ -67,8 +69,6 @@ public class CommandMain {
   public void process(String[] args) {
     cli.parse(args);
 
-    JavaDecompileVersionContext.setJavaVersionToDecompile(cli
-        .getJavaVersionToDecompile());
 
     // If GUI is enabled.
     if (cli.isGuiEnabled()) {
@@ -78,6 +78,11 @@ public class CommandMain {
     ClassInfo info;
     try {
       info = context.loadResource(cli.getInputResource());
+      
+      logger.finer(info+" cli"+cli.getInputResource());
+      logger.finer("Class info: "+info.getMajor() + " " + info.getMinor());
+
+      JavaDecompileVersionContext.setJavaVersionToDecompile("1.4");
 
       System.out.println(context.print(cli.getOutputType(), info));
 

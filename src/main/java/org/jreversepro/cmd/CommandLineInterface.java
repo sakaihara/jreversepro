@@ -19,11 +19,9 @@ package org.jreversepro.cmd;
 
 import java.util.logging.Logger;
 
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.jreversepro.CustomLoggerFactory;
 import org.jreversepro.JReverseProContext.OutputType;
@@ -90,11 +88,7 @@ public class CommandLineInterface {
 
       }
 
-      if (cmd.hasOption(DECOMPILE_VERSION)) {
-        javaVersionToDecompile = cmd.getOptionValue(DECOMPILE_VERSION);
-      }
-
-    } catch (ParseException ex) {
+    } catch (org.apache.commons.cli.ParseException ex) {
       LOGGER.severe(ex.toString());
     }
   }
@@ -111,11 +105,6 @@ public class CommandLineInterface {
     return guiEnabled;
   }
 
-  public String getJavaVersionToDecompile() {
-    return javaVersionToDecompile;
-  }
-
-  private String javaVersionToDecompile = "1.4";
 
   private final Options options;
 
@@ -137,8 +126,6 @@ public class CommandLineInterface {
 
   private static final String OPTION_GUI = "u";
 
-  // t may mean target as v is already used
-  private static final String DECOMPILE_VERSION = "t";
 
   private final Logger LOGGER = CustomLoggerFactory.createLogger();
 

@@ -9,6 +9,7 @@
  */
 package org.jreversepro;
 
+
 /**
  * @author karthikeyanc
  */
@@ -35,7 +36,7 @@ public final class JavaDecompileVersionContext {
   }
 
   public static final void setJavaVersionToDecompile(final String version) {
-    parseJavaVersionToDecompile(version);
+    //TODO: remove this.
   }
 
   public static JAVA_VERSION getJavaVersionToDecompile() {
@@ -45,7 +46,7 @@ public final class JavaDecompileVersionContext {
   private static final void parseJavaVersionToDecompile(final String userInput) {
     // TODO implementation is to be provided
     // till then setting it as java 1.4
-
+    // TODO: Brad:  This is useless.  It should be determined by the class, not the user input.
     ctx.setJavaVersion(JAVA_VERSION.JAVA_1_4);
   }
 

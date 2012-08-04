@@ -45,8 +45,15 @@ public class DefaultClassFileParser implements ClassFileParser {
   public ClassInfo parseInputStream(DataInputStream dis, String pathToClass)
       throws IOException, ClassParserException {
 
+    short minor = dis.readShort();
+    short major = dis.readShort();
+    
     ConstantPool cp = AbstractClassFileParser.readConstantPool(dis);
     ClassInfo clazz = new ClassInfo(cp);
+
+    clazz.setMajorMinor(major, minor);
+    clazz.setMajorMinor(major, minor);
+    
     short access = AbstractClassFileParser.readAccess(dis);
 
     clazz.setAccess(access);
@@ -58,12 +65,12 @@ public class DefaultClassFileParser implements ClassFileParser {
     // </p>.
     short thisClassIndex = AbstractClassFileParser.readThisClassIndex(dis);
     clazz.setThisClass(cp.getClassName(thisClassIndex));
-
+    
+    
     short superClassIndex = AbstractClassFileParser.readSuperClassIndex(dis);
     clazz.setSuperClass(cp.getClassName(superClassIndex));
 
-    List<String> interfaceNames = AbstractClassFileParser.readInterfaces(dis,
-        cp);
+    List<String> interfaceNames = AbstractClassFileParser.readInterfaces(dis, cp);
     clazz.setInterfaces(interfaceNames);
 
     List<Field> fields = AbstractClassFileParser.readFields(dis, cp);
@@ -72,8 +79,10 @@ public class DefaultClassFileParser implements ClassFileParser {
     List<Method> methods = AbstractClassFileParser.readMethods(dis, cp);
     clazz.setMethods(methods);
 
+        
     AbstractClassFileParser.readClassAttributes(dis, cp, clazz);
 
+    
     return clazz;
   }
 

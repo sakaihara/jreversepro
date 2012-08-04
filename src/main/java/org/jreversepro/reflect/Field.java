@@ -25,6 +25,16 @@ package org.jreversepro.reflect;
  **/
 public class Field extends Member {
 
+  private String signature;
+  
+  public void setSignature(String signature) {
+    this.signature = signature;
+  }
+  
+  public String getSignature() {
+    return signature;
+  }
+  
   /**
    * Initial value of field. Applicable only if the qualifier has a 'final'
    * keyword in it.

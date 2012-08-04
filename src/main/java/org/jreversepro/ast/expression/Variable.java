@@ -22,10 +22,13 @@ package org.jreversepro.ast.expression;
  * 
  */
 
+import org.apache.commons.lang.StringUtils;
+import org.jreversepro.jls.emitter.java14.DefaultSourceEmitter;
+import org.jreversepro.reflect.Import;
+import org.jreversepro.reflect.LocalVariableTable;
 import org.jreversepro.reflect.variabletable.VariableTable;
 
 public class Variable extends Expression {
-
   /**
    * 
    * @param _varTable
@@ -74,24 +77,39 @@ public class Variable extends Expression {
 
   }
 
+  @Override
   public String getJLSCode() {
-
+    
     // Try to get the optional debug information. if it is there follow the
     // happy path.
     String variableName = varTable.getName(variableIndex, instructionIndex);
     if (null != variableName) {
+      
+      boolean isResolved = DefaultSourceEmitter.isResolved(DefaultSourceEmitter.getCurrentBlock(), variableName);
+      if(!isResolved) {
+        String variableType = ((LocalVariableTable)varTable).getType(variableIndex, instructionIndex);
+        variableType = StringUtils.removeEnd(variableType, ";");
+        variableType = StringUtils.replace(variableType, "/", ".");
+        variableType = StringUtils.removeStart(variableType, "L");
+        variableType = Import.getClassName(variableType);
+        
+        return variableType + " " + variableName;
+      }
+      
+      
+      
       return variableName;
     }
-
+    
     // If the code was not compiled using debug information, use the Symbol
     // Table for a custom generated name
     return varTable.getName(variableIndex, instructionIndex);
   }
 
-  private VariableTable varTable;
+  private final VariableTable varTable;
 
-  private int variableIndex;
+  private final int variableIndex;
 
-  private int instructionIndex;
+  private final int instructionIndex;
 
 }
