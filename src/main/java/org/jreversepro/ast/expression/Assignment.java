@@ -18,7 +18,11 @@
  **/
 package org.jreversepro.ast.expression;
 
+import org.apache.commons.lang.StringUtils;
 import org.jreversepro.jls.JLSConstants;
+import org.jreversepro.jls.emitter.java14.DefaultSourceEmitter;
+import org.jreversepro.reflect.Import;
+import org.jreversepro.reflect.LocalVariableTable;
 
 /**
  * @author akkumar
@@ -48,7 +52,36 @@ public class Assignment extends Expression {
    */
   @Override
   public String getJLSCode() {
-    return lhs.getJLSCode() + JLSConstants.EQUALTO + rhs.getJLSCode();
+    
+    String lhsVal = lhs.getJLSCode();
+
+    //this checks to see whether the variable has been resolved, and if not, it puts the name of the variable type in
+    //front of the variable.  Ex:  *VariableType* var = ...
+    if(lhs instanceof Variable) {
+      Variable varLhs = (Variable)lhs;
+      String variableName = varLhs.getVarTable().getName(varLhs.getVariableIndex(), varLhs.getInstructionIndex());
+      if (null != variableName) {
+        boolean isResolved = DefaultSourceEmitter.isResolved(DefaultSourceEmitter.getCurrentBlock(), variableName);
+        if(!isResolved) {
+          DefaultSourceEmitter.setResolved(DefaultSourceEmitter.getCurrentBlock(), variableName);
+          String variableType = ((LocalVariableTable)varLhs.getVarTable()).getType(varLhs.getVariableIndex(), varLhs.getInstructionIndex());
+          variableType = StringUtils.removeEnd(variableType, ";");
+          variableType = StringUtils.replace(variableType, "/", ".");
+          variableType = StringUtils.removeStart(variableType, "L");
+          variableType = Import.getClassName(variableType);
+          
+          lhsVal = variableType + " " + variableName;
+        }
+      }
+    }
+    else if(lhs instanceof StaticFieldAccessExpression) {
+      //determine if the static field is the same class.  remove reference to the class.
+      
+      
+    }
+    
+    
+    return lhsVal + JLSConstants.EQUALTO + rhs.getJLSCode();
 
   }
 

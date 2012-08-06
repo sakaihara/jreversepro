@@ -74,8 +74,7 @@ public class DecompilerOutputImpl extends AbstractClassOutputterImpl {
         .getConstantPool());
     Decompiler decompiler = new Decompiler(ctx);
     Block block = decompiler.extractAST();
-    SourceEmitter emitter = SourceEmitterFactory
-        .getSourceEmitter(JLSSource.JDK14);
+    SourceEmitter emitter = SourceEmitterFactory.getSourceEmitter(JLSSource.JDK14);
     outputString(emitter.emitCode(block));
 
   }

@@ -34,10 +34,8 @@ public class BlockEmitterConfigImpl_14 extends BlockEmitterConfig {
   @Override
   public Map<String, String> getConfig() {
     Map<String, String> map = new HashMap<String, String>();
-    map.put(MethodBlock.class.getName(),
-        MethodEmitter.class.getName());
-    map.put(Statement.class.getName(),
-        StatementEmitter.class.getName());
+    map.put(MethodBlock.class.getName(), MethodEmitter.class.getName());
+    map.put(Statement.class.getName(), StatementEmitter.class.getName());
     return map;
   }
 

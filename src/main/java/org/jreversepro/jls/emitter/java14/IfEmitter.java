@@ -41,12 +41,12 @@ public class IfEmitter extends BlockEmitter {
 
   @Override
   protected void emitBlockBeginCode(EmitterTarget target, Block _block) {
-
+    System.out.println("IF BLOCK START");
   }
 
   @Override
   protected void emitBlockEndCode(EmitterTarget target, Block _block) {
-
+    System.out.println("IF BLOCK END");
   }
 
 }

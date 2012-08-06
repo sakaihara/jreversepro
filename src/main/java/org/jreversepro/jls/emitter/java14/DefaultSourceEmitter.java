@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.jreversepro.ast.block.Block;
 import org.jreversepro.ast.block.MethodBlock;
+import org.jreversepro.ast.block.Statement;
 import org.jreversepro.jls.emitter.EmitterTarget;
 import org.jreversepro.jls.emitter.SourceEmitter;
 
@@ -60,12 +61,23 @@ public class DefaultSourceEmitter implements SourceEmitter {
     return false;
   }
   
+  public static void setCurrentBlock(Block currentBlock) {
+    System.out.println(currentBlock.getClass());
+    if(currentBlock instanceof Statement) {
+      //recurse up.
+      setCurrentBlock(currentBlock.getParent());
+    }
+    else {
+      DefaultSourceEmitter.currentBlock = currentBlock;
+    }
+  }
+  
   public String emitCode(Block block) {
     if (!(block instanceof MethodBlock)) {
       throw new IllegalArgumentException(
           "I take only MethodBlocks. Can't take " + block.getClass().getName());
-    }    
-    
+    }
+    setCurrentBlock(block);
     EmitterTarget target = new EmitterTarget();
     block.getEmitter().emitJLSCode(target, block);
     return target.getEmittedCode();
